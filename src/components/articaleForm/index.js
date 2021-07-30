@@ -1,7 +1,9 @@
 import React from 'react';
 import {Field, reduxForm} from "redux-form";
+import {db} from "../../../firebase";
+import {Button} from "@material-ui/core";
 
-function ArticalForm() {
+function ArticaleForm() {
 
   const handleSubmit = (event) => {
 
@@ -35,4 +37,4 @@ function ArticalForm() {
 
 export default reduxForm({
   form: 'articles',
-})(ArticalForm);;
+})(ArticaleForm);;

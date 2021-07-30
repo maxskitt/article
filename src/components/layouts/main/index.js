@@ -5,22 +5,22 @@ import Container from "@material-ui/core/Container";
 import Header from "./header";
 import useStyles from "./style";
 
-function MainLayout({ children }) {
-    const classes = useStyles();
+function MainLayout({children}) {
+  const classes = useStyles();
 
-    return (
-        <>
-            <Head />
-            <Header />
-            <Container id="__mainLayout" classes={{ root: classes.mainLayout }}>
-                {children}
-            </Container>
-        </>
-    );
+  return (
+    <>
+      <Head/>
+      <Header/>
+      <Container id="__mainLayout" classes={{root: classes.mainLayout}}>
+        {children}
+      </Container>
+    </>
+  );
 }
 
 MainLayout.propTypes = {
-    children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default MainLayout;
