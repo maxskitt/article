@@ -1,7 +1,6 @@
-import MainComponent from "../src/components/main";
 
 function MainPage() {
-  return <MainComponent/>;
+  return <>dsfs</>
 }
 
 export default MainPage;
