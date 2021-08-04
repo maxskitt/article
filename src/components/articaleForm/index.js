@@ -1,33 +1,25 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {Field, reduxForm} from 'redux-form'
-import {load as loadAccount} from '../../redux/slices/account';
+import {load as loadAccount} from '../../redux/slices/articles';
 import {db} from "../../../firebase";
 import {Button, Grid, TextField} from "@material-ui/core";
 
-var docRef = db.collection("articles").doc("A");
-var state;
-
-docRef.get().then((doc) => {
-  if (doc.exists) {
-    console.log("Document data:", doc.data());
-    state = doc.data();
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-  }
-}).catch((error) => {
-  console.log("Error getting document:", error);
-});
-
+const data = {
+  // used to populate "account" reducer when "Load" is clicked
+  name: 'Jane',
+  tittle: 'Doe',
+  description: '42',
+}
 
 let InitializeFromStateForm = props => {
   const {handleSubmit, load, pristine, reset, submitting} = props
+  console.log(props)
   return (
     <form onSubmit={handleSubmit}>
       <Grid>
         <Grid>
-          <Button variant="contained" type="button" onClick={() => load(state)}>Load Account</Button>
+          <Button variant="contained" type="button" onClick={() => load(data)}>Load Account</Button>
         </Grid>
         <Grid>
           <Grid>
@@ -78,4 +70,4 @@ InitializeFromStateForm = connect(
   {load: loadAccount}, // bind account loading action creator
 )(InitializeFromStateForm)
 
-export default InitializeFromStateForm
+export default InitializeFromStateForm;

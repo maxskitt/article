@@ -1,24 +1,27 @@
-import React from "react";
+import React, {useState} from "react";
 import Form from "../";
 import {db} from "../../../../../firebase";
+import {useRouter} from "next/router";
 
 function NewForm() {
 
+  const router = useRouter();
+
   const onSubmit = (values) => {
     console.log('EDIT values', values);
-
-    db.collection("articles").doc('1').set({
+    // Add a new document with a generated id.
+    db.collection("articles").add({
       name: values.name,
-      tittle: values.tittle,
+      title: values.title,
       description: values.description
     })
-      .then(() => {
-        console.log("Document successfully written!");
+      .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+        return router.push(`articles/${docRef.id}`);
       })
       .catch((error) => {
-        console.error("Error writing document: ", error);
+        console.error("Error adding document: ", error);
       });
-
   }
 
   return (
@@ -26,4 +29,4 @@ function NewForm() {
   )
 }
 
-export default NewForm
+export default NewForm;

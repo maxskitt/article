@@ -1,7 +1,7 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Container";
-import {Button, Grid} from "@material-ui/core";
+import { Grid, Link} from "@material-ui/core";
 import useStyles from "./style";
 
 function Header() {
@@ -16,9 +16,18 @@ function Header() {
     >
       <Container disableGutters>
         <Grid container justify="center">
-          <Button variant="contained" color="primary">
-            New articles
-          </Button>
+          <ul>
+            <li>
+              <Link href="/articles">
+                <a>New articles</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/">
+                <a>Home</a>
+              </Link>
+            </li>
+          </ul>
         </Grid>
       </Container>
     </AppBar>

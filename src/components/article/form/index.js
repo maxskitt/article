@@ -1,33 +1,12 @@
-import React, {useState} from "react";
+import React from "react";
 import {Field, reduxForm} from 'redux-form';
-import {Grid, Input, TextField} from "@material-ui/core";
+import {Button, Grid} from "@material-ui/core";
+import {renderFieldName, renderFieldTextArea, renderFieldTitle} from "../../redux-form/aritcles";
+import {useSelector} from "react-redux";
+import articles from "../../../redux/slices/articles";
 
 function Form(props) {
-  const {handleSubmit, pristine, reset, submitting, initialValues} = props;
-  console.log(props);
-
-  const [value, setValue] = useState({initialValues});
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  const renderField = ({input, label, type, meta: {touched, error}}) => (
-    <div>
-      <div>
-        <TextField
-          id="standard-multiline-flexible"
-          label="Multiline"
-          multiline
-          maxRows={4}
-          value={value}
-          onChange={handleChange}
-        />
-        {/*<Input {...input} type={type} placeholder={label} />*/}
-        {touched && error && <span>{error}</span>}
-      </div>
-    </div>
-  )
+  const {handleSubmit, pristine, reset, submitting} = props;
 
   return (
     <Grid container justify='center'>
@@ -36,7 +15,7 @@ function Form(props) {
           <div>
             <Field
               name="name"
-              component={renderField}
+              component={renderFieldName}
               type="text"
               placeholder="Name"
             />
@@ -46,25 +25,24 @@ function Form(props) {
           <div>
             <Field
               name="title"
-              component={renderField}
+              component={renderFieldTitle}
               type="text"
-              placeholder="Tittle"
+              placeholder="title"
             />
           </div>
         </div>
         <div>
-          <label>Description</label>
           <div>
-            <Field name="description" component="textarea"/>
+            <Field name="description" placeholder="description" component={renderFieldTextArea}/>
           </div>
         </div>
         <div>
-          <button type="submit" disabled={pristine || submitting}>
+          <Button type="submit" disabled={pristine || submitting}>
             Submit
-          </button>
-          <button type="button" disabled={pristine || submitting} onClick={reset}>
+          </Button>
+          <Button type="button" disabled={pristine || submitting} onClick={reset}>
             Clear Values
-          </button>
+          </Button>
         </div>
       </form>
     </Grid>
@@ -74,6 +52,5 @@ function Form(props) {
 Form = reduxForm({
   form: 'articles',
 })(Form);
-
 
 export default Form;
