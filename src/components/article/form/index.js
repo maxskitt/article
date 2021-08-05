@@ -2,14 +2,13 @@ import React from "react";
 import {Field, reduxForm} from 'redux-form';
 import {Button, Grid} from "@material-ui/core";
 import {renderFieldName, renderFieldTextArea, renderFieldTitle} from "../../redux-form/aritcles";
-import {useSelector} from "react-redux";
 import articles from "../../../redux/slices/articles";
 
 function Form(props) {
   const {handleSubmit, pristine, reset, submitting} = props;
 
   return (
-    <Grid container justify='center'>
+    <Grid container justifyContent='center'>
       <form onSubmit={handleSubmit}>
         <div>
           <div>

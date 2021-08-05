@@ -26,7 +26,6 @@ const renderFieldTitle = ({input, placeholder, type, meta: {touched, error}}) =>
         label={`${placeholder}`}
         multiline
         maxRows={4}
-        // defaultValue={initialValues.title}
       />
       {touched && error && <span>{error}</span>}
     </div>
@@ -42,7 +41,6 @@ const renderFieldTextArea = ({input, placeholder, type, meta: {touched, error}})
         label={`${placeholder}`}
         multiline
         maxRows={4}
-        // defaultValue={initialValues.title}
       />
       {touched && error && <span>{error}</span>}
     </div>

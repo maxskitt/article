@@ -15,16 +15,16 @@ function Header() {
       className={classes.headerBorder}
     >
       <Container disableGutters>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <ul>
             <li>
               <Link href="/articles">
-                <a>New articles</a>
+                New articles
               </Link>
             </li>
             <li>
               <Link href="/">
-                <a>Home</a>
+                Home
               </Link>
             </li>
           </ul>

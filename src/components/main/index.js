@@ -1,45 +1,63 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Grid, Link} from "@material-ui/core";
-import {db} from "../../../firebase";
+import React, {useEffect} from 'react';
+import {Box, Button, Card, CardActions, CardContent, Grid, Link, Typography} from "@material-ui/core";
 import {useRouter} from "next/router";
-import map from 'lodash/map';
+import {articlesRequested} from "../../redux/slices/articles";
+import {useDispatch, useSelector} from "react-redux";
+import {map} from "lodash";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  root: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+});
 
 function MainComponent() {
 
-  const [initialArticles, setInitialArticles] = useState([]);
   const route = useRouter();
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const articles = useSelector((state) => state.articles.collection);
 
   useEffect(() => {
-    let arr = [];
-
-    db.collection("articles").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-        arr.push(doc.data());
-      });
-      setInitialArticles(arr);
-
-    });
-
-  }, [route])
-
+    dispatch(articlesRequested({status: 'admin'}));
+  }, [dispatch])
 
   return (
-    <Grid container justify="center">
-      <Box mt={3} width={1} textAlign="center" p={1}>
-        {map(initialArticles, (articles, index) =>
-          <Grid container justify="center">
-            <Grid key={index}><p>{articles.name}</p></Grid>
-            <Grid key={index}><p>{articles.title}</p></Grid>
-            <Grid key={index}><p>{articles.description}</p></Grid>
-            <Link href="articles/1">
-            <a>edit</a>
-          </Link>
-          </Grid>
-        )}
-      </Box>
-    </Grid>
+    <Box mt={3} width={1} textAlign="center" justifyContent="center" p={1}>
+      {map(articles, (article, index) =>
+        <Card key={index} className={classes.root} variant="outlined">
+          <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              {article.title}
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {article.name}
+            </Typography>
+            <Typography className={classes.pos} color="textSecondary">
+              {article.description}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Link href={`/articles/${article.id}/edit`}>
+              <a>Home</a>
+            </Link>
+          </CardActions>
+        </Card>
+      )}
+      <Button>next</Button>
+    </Box>
   );
 }
 

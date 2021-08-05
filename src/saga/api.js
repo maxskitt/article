@@ -1,32 +1,21 @@
-import axios from "axios";
+import firebase from 'firebase';
 
-const serverUrl = "https://place_here_your_server_path";
+const firebaseConfig = {
+    apiKey: "AIzaSyDpQQ2taggSJjFXC1fQNxwS1klFYwH7mA0",
+    authDomain: "new-articles-524da.firebaseapp.com",
+    projectId: "new-articles-524da",
+    storageBucket: "new-articles-524da.appspot.com",
+    messagingSenderId: "970588219140",
+    appId: "1:970588219140:web:66041efb99cac5708f5251",
+    measurementId: "G-RTNXBG9QBF"
+};
 
-const headers = () => ({
-    "access-token":
-        typeof localStorage !== "undefined"
-            ? localStorage.getItem("access-token")
-            : "",
-    "token-type":
-        typeof localStorage !== "undefined"
-            ? localStorage.getItem("token-type")
-            : "",
-    client:
-        typeof localStorage !== "undefined" ? localStorage.getItem("client") : "",
-    expiry:
-        typeof localStorage !== "undefined" ? localStorage.getItem("expiry") : "",
-    uid: typeof localStorage !== "undefined" ? localStorage.getItem("uid") : "",
-    "Content-Type": "application/json",
-});
+const app = !firebase.apps.length
+  ? firebase.initializeApp(firebaseConfig)
+  : firebase.app();
 
-const axiosClient = () => {
-    const instance = axios.create({
-        responseType: "JSON",
-        baseURL: serverUrl,
-        headers: headers(),
-    });
+const db = app.firestore();
+const auth = app.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
 
-    return instance
-}
-
-export { axiosClient, headers, serverUrl };
+export { db, auth, provider };

@@ -2,50 +2,38 @@ import React, {useEffect, useState} from "react";
 import isEmpty from 'lodash/isEmpty';
 import Form from "../index";
 import {useRouter} from "next/router";
-import {db} from "../../../../../firebase";
-import {useDispatch} from "react-redux";
+import {initialArticles, updateArticles} from "../../../../saga/articles/api";
 
 function EditForm() {
   const route = useRouter();
   const [initialValues, setInitialValues] = useState({});
-  let docRef = db.collection("articles").doc(route.query.id);
 
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   articleRequested({initialValues});
-  // }, [dispatch]);
+  console.log('initialValues', initialValues)
 
   const onSubmit = (values) => {
     console.log('EDIT values', values);
-    console.log(initialValues);
+    updateArticles(values, route.query.id);
   }
 
   useEffect(() => {
     if (!isEmpty(route.query.id)) {
       // LOAD DATA FROM SERVER DB
       // setInitialValues()
-      docRef.get().then((doc) => {
-        if (doc.exists) {
-          console.log("Document data:", doc.data());
-          // setInitialValues(doc.data());
-          setInitialValues(doc.data());
-        //  dispatch(articleRequested(doc.data()));
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      }).catch((error) => {
-        console.log("Error getting document:", error);
-      }
-      );
+      setInitialValues(initialArticles(route.query.id));
+      console.log('fdsf');
     }
   }, [route])
 
   return (
-    <Form onSubmit={onSubmit}/>
+    <Form onSubmit={onSubmit} initialValues={initialValues}/>
   )
 }
 
 export default EditForm
 
+
+// useEffect(() => {
+//   console.log('docRef', docRef)
+//
+//   // setInitialValues(docRef)
+// }, [docRef]);
