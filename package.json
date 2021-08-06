@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@material-ui/data-grid": "^4.0.0-alpha.35",
+    "@material-ui/icons": "^4.11.2",
     "prop-types": "^15.7.2",
     "redux-form": "^8.3.7"
   }

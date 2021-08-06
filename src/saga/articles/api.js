@@ -1,13 +1,12 @@
-import {db} from "../api";
 import firebase from "firebase";
+import {db} from "../api";
 
-let docRef = db.collection("articles");
 
-function fetchArticles({}) {
+function fetchArticles() {
+  const docRef = db.collection("articles");
   return docRef.get().then((querySnapshot) => {
     let arr = []
     querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
       console.log(doc.id, " => ", doc.data());
       arr.push({...{id: doc.id}, ...doc.data()});
     });
@@ -16,7 +15,7 @@ function fetchArticles({}) {
 }
 
 function initialArticles(router) {
-  let docRef = db.collection("articles").doc(router);
+  const docRef = db.collection("articles").doc(router);
 
   docRef.get().then((doc) => {
     if (doc.exists) {
@@ -86,6 +85,7 @@ export {fetchArticles, pushArticles, updateArticles, initialArticles}
 //   });
 
 import {useState} from "react";
+import {last} from "lodash";
 
 // const docRef = db.collection("articles").doc(route.query.id);
 //

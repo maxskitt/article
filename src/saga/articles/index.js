@@ -4,8 +4,8 @@ import {articlesFailed, articlesRequested, articlesSucceeded} from "../../redux/
 
 function* articlesRequest() {
   try {
-    const response = yield call(fetchArticles, {});
-    yield put(articlesSucceeded({ users: response }));
+    const response = yield call(fetchArticles);
+    yield put(articlesSucceeded({ articles: response }));
   } catch (error) {
     yield put(articlesFailed({ error }));
   }
