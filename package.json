@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.12.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@reduxjs/toolkit": "^1.6.1",
+    "collect.js": "^4.28.6",
     "express": "^4.17.1",
     "firebase": "^8.8.1",
     "lodash": "^4.17.21",

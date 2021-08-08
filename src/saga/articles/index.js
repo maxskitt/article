@@ -11,6 +11,15 @@ function* articlesRequest() {
   }
 }
 
+function* articleRequest() {
+  try {
+    const response = yield call(fetchArticles);
+    yield put(articlesSucceeded({ articles: response }));
+  } catch (error) {
+    yield put(articlesFailed({ error }));
+  }
+}
+
 function* articles() {
   yield takeLatest(articlesRequested, articlesRequest);
 }

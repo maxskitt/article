@@ -1,7 +1,6 @@
 import firebase from "firebase";
 import {db} from "../api";
 
-
 function fetchArticles() {
   const docRef = db.collection("articles");
   return docRef.get().then((querySnapshot) => {
@@ -16,10 +15,10 @@ function fetchArticles() {
 
 function initialArticles(router) {
   const docRef = db.collection("articles").doc(router);
-
-  docRef.get().then((doc) => {
+   return docRef.get().then((doc) => {
     if (doc.exists) {
       console.log("Document data:", doc.data());
+      return doc.data()
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");

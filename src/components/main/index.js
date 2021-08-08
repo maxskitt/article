@@ -1,58 +1,62 @@
 import React, {useEffect, useState} from 'react';
 import {
   Box,
-  Button,
   Card,
   CardActions,
-  CardContent,
-  FormControl,
-  Grid,
-  InputLabel,
-  Link, MobileStepper, Select,
+  CardContent, FormControl,
+  Grid, InputLabel,
+  Link, MenuItem, Select,
   Typography, useTheme
 } from "@material-ui/core";
 import {useRouter} from "next/router";
 import {
-  articlesDefault,
-  articlesRequested, articlesSortFirst,
-  articlesSortLast, articlesStepsBack, articlesStepsNext
+  articlesPagination,
+  articlesRequested, articlesSortDefault, articlesSortFirst, articlesSortLast
 } from "../../redux/slices/articles";
 import {useDispatch, useSelector} from "react-redux";
 import {map} from "lodash";
 import useStyles from "./style";
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import {DataGrid} from "@material-ui/data-grid";
+import collect from "collect.js";
+import Pagination from '@material-ui/lab/Pagination';
 
 function MainComponent() {
 
   const dispatch = useDispatch();
-  const handleNext = () => dispatch(articlesStepsNext());
-  const handleBack = () => dispatch(articlesStepsBack());
   const route = useRouter();
   const classes = useStyles();
   const theme = useTheme();
 
-  const articles = useSelector((state) => state.articles);
-  console.log(articles.param.page, Math.pow(articles.param.per, articles.param.page), "dsfsd")
-  const currentArticles = articles.collection.slice(articles.param.page, articles.param.per, articles.param.page);
+  const [Search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
 
-  const [state, setState] = useState({
-    articles: 'articles',
-    name: 'default',
-  });
+  const handleChangeSearch = (event) => {
+    setSearch(event.target.value);
 
-  const handleChange = (event) => {
-    const name = event.target.name;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
-    if (event.target.value === '10') {
+    if (event.target.value === 10) {
       dispatch(articlesSortLast());
-    } else if (event.target.value === '20') {
+    } else if (event.target.value === 20) {
       dispatch(articlesSortFirst());
+    } else {
+      dispatch(articlesSortDefault());
     }
+
+  };
+
+  const handleCloseSearch = () => {
+    setOpen(false);
+  };
+
+  const handleOpenSearch = () => {
+    setOpen(true);
+  };
+
+  const articles = useSelector((state) => state.articles.collection);
+  const param = useSelector((state) => state.articles.param);
+  const collection = collect(articles);
+  const forPage = collection.forPage(param.page, param.per);
+
+  const handleChange = (event, value) => {
+    dispatch(articlesPagination(value));
   };
 
   useEffect(() => {
@@ -61,23 +65,27 @@ function MainComponent() {
 
   return (
     <Box mt={3} width={1} textAlign="center" justifyContent="center" p={1}>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-native-simple">Articles</InputLabel>
-        <Select
-          native
-          value={state.articles}
-          onChange={handleChange}
-          inputProps={{
-            name: 'articles',
-            id: 'articles-native-simple',
-          }}
-        >
-          <option aria-label="None" value=""/>
-          <option value={10} onChange={handleChange}>Last</option>
-          <option value={20} onChange={handleChange}>First</option>
-        </Select>
-      </FormControl>
-      {map(currentArticles, (article, index) =>
+      <Grid>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="demo-controlled-open-select-label">Search</InputLabel>
+          <Select
+              labelId="demo-controlled-open-select-label"
+              id="demo-controlled-open-select"
+              open={open}
+              onClose={handleCloseSearch}
+              onOpen={handleOpenSearch}
+              value={Search}
+              onChange={handleChangeSearch}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Last time</MenuItem>
+            <MenuItem value={20}>First time</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      {map(forPage.all(), (article, index) =>
         <Card key={index} variant="outlined">
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -98,25 +106,7 @@ function MainComponent() {
         </Card>
       )}
       <Grid container justifyContent="center">
-        <MobileStepper
-          variant="dots"
-          steps={articles.param.total}
-          position="static"
-          activeStep={articles.param.page}
-          className={classes.root}
-          nextButton={
-            <Button size="small" onClick={handleNext} disabled={articles.param.page === articles.param.total - 1}>
-              Next
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
-            </Button>
-          }
-          backButton={
-            <Button size="small" onClick={handleBack} disabled={articles.param.page === 0}>
-              {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
-              Back
-            </Button>
-          }
-        />
+        <Pagination count={param.total} page={param.page} onChange={handleChange} variant="outlined" />
       </Grid>
     </Box>
   );

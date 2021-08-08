@@ -7,6 +7,8 @@ import articles from "../../../redux/slices/articles";
 function Form(props) {
   const {handleSubmit, pristine, reset, submitting} = props;
 
+  console.log(props, "props")
+
   return (
     <Grid container justifyContent='center'>
       <form onSubmit={handleSubmit}>

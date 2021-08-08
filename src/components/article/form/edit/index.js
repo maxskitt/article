@@ -6,26 +6,31 @@ import {initialArticles, updateArticles} from "../../../../saga/articles/api";
 
 function EditForm() {
   const route = useRouter();
-  const [initialValues, setInitialValues] = useState({});
-
-  console.log('initialValues', initialValues)
+  const [initialValues, setInitialValues] = useState();
 
   const onSubmit = (values) => {
     console.log('EDIT values', values);
     updateArticles(values, route.query.id);
   }
 
+    async function f1(router) {
+        let x = await initialArticles(router);
+      setInitialValues(x)
+    }
+
   useEffect(() => {
     if (!isEmpty(route.query.id)) {
       // LOAD DATA FROM SERVER DB
       // setInitialValues()
-      setInitialValues(initialArticles(route.query.id));
-      console.log('fdsf');
+      f1(route.query.id).then();
     }
   }, [route])
 
+  //
+
+
   return (
-    <Form onSubmit={onSubmit} initialValues={initialValues}/>
+    <Form onSubmit={onSubmit} initialValues={initialValues} />
   )
 }
 
