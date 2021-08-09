@@ -1,50 +1,50 @@
 import React from "react";
 import {Field, reduxForm} from 'redux-form';
-import {Button, Grid} from "@material-ui/core";
-import {renderFieldName, renderFieldTextArea, renderFieldTitle} from "../../redux-form/aritcles";
+import {Button, Grid, Typography, useTheme} from "@material-ui/core";
+import renderField from "../../redux-form/aritcles";
 import articles from "../../../redux/slices/articles";
+import useStyles from "./style";
+import {useRouter} from "next/router";
 
 function Form(props) {
   const {handleSubmit, pristine, reset, submitting} = props;
-
-  console.log(props, "props")
+  const route = useRouter();
+  const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <Grid container justifyContent='center'>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <div>
-            <Field
-              name="name"
-              component={renderFieldName}
-              type="text"
-              placeholder="Name"
-            />
-          </div>
-        </div>
-        <div>
-          <div>
-            <Field
-              name="title"
-              component={renderFieldTitle}
-              type="text"
-              placeholder="title"
-            />
-          </div>
-        </div>
-        <div>
-          <div>
-            <Field name="description" placeholder="description" component={renderFieldTextArea}/>
-          </div>
-        </div>
-        <div>
-          <Button type="submit" disabled={pristine || submitting}>
+      <form onSubmit={handleSubmit} className={classes.root}>
+        <Typography align="center" variant="h4" component="h2">
+          Form
+        </Typography>
+        <Field
+          name="name"
+          component={renderField}
+          label="Outlined"
+          variant="outlined"
+        />
+        <Field
+          name="title"
+          component={renderField}
+          label="Outlined"
+          variant="outlined"
+        />
+        <Field
+          name="description"
+          label="Multiline"
+          variant="outlined"
+          rows={4}
+          component={renderField}
+        />
+        <Grid container className={classes.containerButton}>
+          <Button type="submit" variant="contained"color="primary" disabled={pristine || submitting}>
             Submit
           </Button>
-          <Button type="button" disabled={pristine || submitting} onClick={reset}>
+          <Button variant="contained" color="secondary" disabled={pristine || submitting} onClick={reset}>
             Clear Values
           </Button>
-        </div>
+        </Grid>
       </form>
     </Grid>
   )

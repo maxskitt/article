@@ -13,7 +13,7 @@ function EditForm() {
     updateArticles(values, route.query.id);
   }
 
-    async function f1(router) {
+    async function initialArticlesAsync(router) {
         let x = await initialArticles(router);
       setInitialValues(x)
     }
@@ -21,24 +21,13 @@ function EditForm() {
   useEffect(() => {
     if (!isEmpty(route.query.id)) {
       // LOAD DATA FROM SERVER DB
-      // setInitialValues()
-      f1(route.query.id).then();
+      initialArticlesAsync(route.query.id).then();
     }
   }, [route])
-
-  //
-
 
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues} />
   )
 }
 
-export default EditForm
-
-
-// useEffect(() => {
-//   console.log('docRef', docRef)
-//
-//   // setInitialValues(docRef)
-// }, [docRef]);
+export default EditForm;

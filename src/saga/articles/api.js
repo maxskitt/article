@@ -1,12 +1,21 @@
 import firebase from "firebase";
 import {db} from "../api";
+import {ceil} from "lodash";
 
-function fetchArticles() {
-  const docRef = db.collection("articles");
+function fetchArticlesCount() {
+
+  db.collection('articles').get().then(snap => {
+    return  snap.size
+  });
+
+  return ceil(10 / 3);
+}
+
+function fetchArticles(action) {
+  const docRef = db.collection("articles").limit((action * 3));
   return docRef.get().then((querySnapshot) => {
     let arr = []
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
       arr.push({...{id: doc.id}, ...doc.data()});
     });
     return arr;
@@ -15,12 +24,10 @@ function fetchArticles() {
 
 function initialArticles(router) {
   const docRef = db.collection("articles").doc(router);
-   return docRef.get().then((doc) => {
+  return docRef.get().then((doc) => {
     if (doc.exists) {
-      console.log("Document data:", doc.data());
       return doc.data()
     } else {
-      // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   }).catch((error) => {
@@ -29,7 +36,6 @@ function initialArticles(router) {
 }
 
 function pushArticles(values) {
-  // Add a new document with a generated id.
   db.collection("articles").add({
     name: values.name,
     title: values.title,
@@ -57,59 +63,13 @@ function updateArticles(values, router) {
     });
 }
 
-export {fetchArticles, pushArticles, updateArticles, initialArticles}
+function deleteArticles(router) {
 
+  db.collection("articles").doc(router).delete().then(() => {
+    console.log("Document successfully deleted!");
+  }).catch((error) => {
+    console.error("Error removing document: ", error);
+  });
+}
 
-// useEffect(() => {
-//   docRef.get().then((querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//       // doc.data() is never undefined for query doc snapshots
-//       console.log(doc.id, " => ", doc.data());
-//       dispatch(articlesRequested({...{id: doc.id}, ...doc.data()}));
-//     });
-//
-//   });
-// }, [route])
-
-
-// docRef.get().then((doc) => {
-//     if (doc.exists) {
-//       console.log("Document data:", doc.data());
-//       p = doc.data();
-//     } else {
-//       console.log("No such document!");
-//     }
-//   }).catch((error) => {
-//     console.log("Error getting document:", error);
-//   });
-
-import {useState} from "react";
-import {last} from "lodash";
-
-// const docRef = db.collection("articles").doc(route.query.id);
-//
-// docRef.get().then((doc) => {
-//   if (doc.exists) {
-//     console.log("Document data:", doc.data());
-//     // setInitialValues(doc.data());
-//
-//     //  dispatch(articleRequested(doc.data()));
-//   } else {
-//     // doc.data() will be undefined in this case
-//     console.log("No such document!");
-//   }
-// }).catch((error) => {
-//   console.log("Error getting document:", error);
-// });
-
-// const docRef = db.collection("articles");
-//
-// console.log(docRef)
-//
-// docRef.get().then((querySnapshot) => {
-//   querySnapshot.forEach((doc) => {
-//     // doc.data() is never undefined for query doc snapshots
-//
-//     console.log(doc.id, " => ", doc.data());
-//   });
-// });
+export {fetchArticlesCount, fetchArticles, pushArticles, updateArticles, initialArticles, deleteArticles}

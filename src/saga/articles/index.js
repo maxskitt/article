@@ -2,18 +2,9 @@ import { takeLatest, call, put } from "redux-saga/effects";
 import {fetchArticles} from "./api";
 import {articlesFailed, articlesRequested, articlesSucceeded} from "../../redux/slices/articles";
 
-function* articlesRequest() {
+function* articlesRequest(action) {
   try {
-    const response = yield call(fetchArticles);
-    yield put(articlesSucceeded({ articles: response }));
-  } catch (error) {
-    yield put(articlesFailed({ error }));
-  }
-}
-
-function* articleRequest() {
-  try {
-    const response = yield call(fetchArticles);
+    const response = yield call(fetchArticles, action.payload);
     yield put(articlesSucceeded({ articles: response }));
   } catch (error) {
     yield put(articlesFailed({ error }));

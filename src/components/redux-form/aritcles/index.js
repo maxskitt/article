@@ -1,50 +1,20 @@
 import {TextField} from "@material-ui/core";
 import React from "react";
 
-function renderFieldName({input, placeholder, type, meta: {touched, error}}) {
+function renderField({input, rows, label, variant, meta: {touched, error}}) {
   return (
     <div>
       <div>
         <TextField
           {...input}
-          id="standard-multiline-flexible"
-          label={`${placeholder}`}
+          label={label}
+          variant={variant}
           multiline
-          maxRows={4}
+          rows={rows}
         />
         {touched && error && <span>{error}</span>}
       </div>
     </div>);
 }
 
-const renderFieldTitle = ({input, placeholder, type, meta: {touched, error}}) => (
-  <div>
-    <div>
-      <TextField
-        {...input}
-        id="standard-multiline-flexible"
-        label={`${placeholder}`}
-        multiline
-        maxRows={4}
-      />
-      {touched && error && <span>{error}</span>}
-    </div>
-  </div>
-)
-
-const renderFieldTextArea = ({input, placeholder, type, meta: {touched, error}}) => (
-  <div>
-    <div>
-      <TextField
-        {...input}
-        id="standard-multiline-flexible"
-        label={`${placeholder}`}
-        multiline
-        maxRows={4}
-      />
-      {touched && error && <span>{error}</span>}
-    </div>
-  </div>
-)
-
-export {renderFieldName, renderFieldTitle, renderFieldTextArea}
+export default renderField;

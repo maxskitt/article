@@ -1,9 +1,11 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {ceil, reverse, sortBy} from "lodash";
+import {ceil, filter, findLast, reverse, sortBy} from "lodash";
+import {fetchArticlesCount} from "../../saga/articles/api";
 
 const initialState = {
   collection: [],
   collectionDefault: [],
+  choiceCollection: [],
   meta: {},
   param: {
     page: 1,
@@ -22,16 +24,22 @@ const slice = createSlice({
     reset: () => initialState,
     articlesRequested: (state, action) => {
       state.loading = true
+
     },
     articlesSucceeded: (state, action) => {
-      state.param.total = ceil(action.payload.articles.length/3)
+      state.param.total = fetchArticlesCount();
       state.collection = action.payload.articles
       state.collectionDefault = action.payload.articles
+      state.choiceCollection = action.payload.articles
       state.loading = false
     },
     articlesFailed: (state, action) => {
       state.loading = false
       state.error = action.payload.error
+    },
+    articlesSearch: (state, action) => {
+      state.loading = false
+      state.choiceCollection = filter(state.collection, {title: action.payload});
     },
     articlesSortDefault: (state, action) => {
       state.loading = false
@@ -57,10 +65,12 @@ export const {
   articlesRequested,
   articlesSucceeded,
   articlesFailed,
+  articlesSearch,
   articlesSortDefault,
   articlesSortFirst,
   articlesSortLast,
   articlesPagination,
+
 } = slice.actions;
 
 export default slice.reducer;
