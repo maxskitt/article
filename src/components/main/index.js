@@ -23,7 +23,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 function MainComponent() {
 
-  const articles = useSelector((state) => state.articles.choiceCollection);
+  const articles = useSelector((state) => state.articles.collection);
   const param = useSelector((state) => state.articles.param);
   const collection = collect(articles);
   const forPage = collection.forPage(param.page, param.per);
@@ -40,11 +40,11 @@ function MainComponent() {
   const handleChangeSort = (event) => {
     setSort(event.target.value);
     if (event.target.value === 10) {
-      dispatch(articlesSortLast());
+      dispatch(articlesRequested({limit: param.page, sort: 'desc'}));
     } else if (event.target.value === 20) {
-      dispatch(articlesSortFirst());
+      dispatch(articlesRequested({limit: param.page, sort: 'asc'}));
     } else {
-      dispatch(articlesSortDefault());
+      dispatch(articlesRequested({limit: param.page}));
     }
   };
 
@@ -61,13 +61,12 @@ function MainComponent() {
   };
 
   useEffect(() => {
-    dispatch(articlesRequested(param.page));
-  }, [param.page])
+    dispatch(articlesRequested({limit: param.page, search: search}));
+  }, [param.page, search])
 
   const handleChangeSearch = (event) => {
     setSearch(event.target.value);
     console.log(search, "handleChangeSearch")
-    dispatch(articlesSearch(search));
   };
 
   return (

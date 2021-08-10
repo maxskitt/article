@@ -1,25 +1,53 @@
 import firebase from "firebase";
 import {db} from "../api";
-import {ceil} from "lodash";
-
-function fetchArticlesCount() {
-
-  db.collection('articles').get().then(snap => {
-    return  snap.size
-  });
-
-  return ceil(10 / 3);
-}
 
 function fetchArticles(action) {
-  const docRef = db.collection("articles").limit((action * 3));
-  return docRef.get().then((querySnapshot) => {
-    let arr = []
-    querySnapshot.forEach((doc) => {
-      arr.push({...{id: doc.id}, ...doc.data()});
+  const docRef = db.collection("articles")
+  let countArticles
+
+  if (action.search) {
+
+    db.collection('articles').where("title", "==", action.search).get().then(snap => {
+      countArticles = snap.size
     });
-    return arr;
-  });
+
+    return docRef.where("title", "==", action.search).limit(action.limit * 3).get().then((querySnapshot) => {
+      let arr = []
+      querySnapshot.forEach((doc) => {
+        arr.push({...{id: doc.id}, ...doc.data()});
+      });
+      arr.push(countArticles)
+      return arr;
+    });
+  } else if (action.sort) {
+    db.collection('articles').get().then(snap => {
+      countArticles = snap.size
+    });
+
+    return docRef.orderBy("lastSeen", action.sort).limit(action.limit * 3).get().then((querySnapshot) => {
+      let arr = []
+      querySnapshot.forEach((doc) => {
+
+        arr.push({...{id: doc.id}, ...doc.data()});
+      });
+      arr.push(countArticles)
+      return arr;
+    });
+  } else {
+    db.collection('articles').get().then(snap => {
+      countArticles = snap.size
+    });
+
+    return docRef.limit(action.limit * 3).get().then((querySnapshot) => {
+      let arr = []
+      querySnapshot.forEach((doc) => {
+
+        arr.push({...{id: doc.id}, ...doc.data()});
+      });
+      arr.push(countArticles)
+      return arr;
+    });
+  }
 }
 
 function initialArticles(router) {
@@ -72,4 +100,20 @@ function deleteArticles(router) {
   });
 }
 
-export {fetchArticlesCount, fetchArticles, pushArticles, updateArticles, initialArticles, deleteArticles}
+export {fetchArticles, pushArticles, updateArticles, initialArticles, deleteArticles}
+
+
+// db.collection('articles').where("name" || "title" || "description","==", action.search).get().then(snap => {
+//   count = snap.size
+// });
+// return docRef.where("name" || "title" || "description", "==", action.search).get().then((querySnapshot) => {
+//   let arr = []
+//   querySnapshot.forEach((doc) => {
+//     arr.push({...{id: doc.id}, ...doc.data()});
+//   });
+//   arr.push(count)
+//   return arr;
+// });
+
+
+// .orderBy("lastSeen", action.sort)

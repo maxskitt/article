@@ -21,18 +21,18 @@ function Form(props) {
         <Field
           name="name"
           component={renderField}
-          label="Outlined"
+          label="Name"
           variant="outlined"
         />
         <Field
           name="title"
           component={renderField}
-          label="Outlined"
+          label="Title"
           variant="outlined"
         />
         <Field
           name="description"
-          label="Multiline"
+          label="Description"
           variant="outlined"
           rows={4}
           component={renderField}
